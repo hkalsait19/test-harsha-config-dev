@@ -1,0 +1,6 @@
+paramiko
+pymssql
+urllib3
+certify
+ansible
+requests
