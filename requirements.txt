@@ -1,6 +1,6 @@
 paramiko
 pymssql
 urllib3
-certify
+certifi #update name
 ansible
 requests
