@@ -43,4 +43,7 @@ jobs:
     
     - name: Deactivate virtual environment
       run: |
-        deactivate
+        exit 1 # failure stop
+       #deactivate
+
+  
