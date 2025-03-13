@@ -146,7 +146,7 @@ Use GitHub for source control management and build automation. Create a reposito
      run: source venv/bin/activate
    ```
    This step activates the previously created virtual environment.
-   
+
    The command source venv/bin/activate is used to activate a Python virtual environment on Unix-like systems (e.g., Linux, macOS). The bin directory is where the activation script is located by default when a virtual environment is created using python -m venv venv.
    ex: source myenv/bin/activate (Unix-like systems)
       .\myenv\Scripts\activate (Windows)
