@@ -60,51 +60,128 @@ Use GitHub for source control management and build automation. Create a reposito
 
 1. **Create GitHub Action Workflow File**
    - In your repository, create a directory named `.github/workflows`.
-   - Inside this directory, create a file named `python-build.yml` and add the following content:
-     ````yaml name=.github/workflows/python-build.yml
-     name: Python Build
+   - Inside this directory, create a file named `python-package.yml`
 
-     on: [push]
+## Explanation of Workflow Steps
 
-     jobs:
-       build:
-         runs-on: ubuntu-latest
+1. **Workflow Trigger**:
 
-         steps:
-         - name: Checkout repository
-           uses: actions/checkout@v2
+    ```yaml
+    on: [push]
+    ```
+    on: This key specifies the event that triggers the workflow. The value [push] indicates that the workflow will be triggered whenever there is a push event to the repository. This means that any time you push changes to any branch in the repository, this workflow will be executed.
 
-         - name: List repository content
-           run: ls -la
+    ex.:
+        
+        1. on: [pull_request]: Triggers on pull request events - such as opened, synchronized, and reopened.
+        ex:  pull_request:
+              types: [opened, synchronized, reopened]
 
-         - name: Set up Python 3.11
-           uses: actions/setup-python@v2
-           with:
-             python-version: '3.11'
+        2. on: [schedule]: Triggers on a schedule using a cron expression - runs at 2:00 AM UTC every day.
+        ex: schedule:
+              - cron: '0 2 * * *'
 
-         - name: Create virtual environment
-           run: python -m venv venv
+        3. on: [workflow_dispatch]: Triggers manually using the workflow dispatch event.
 
-         - name: Activate virtual environment
-           run: source venv/bin/activate
+2. **Jobs**:
 
-         - name: Install dependencies
-           run: |
-             pip install --upgrade pip || { echo 'Failed to upgrade pip'; exit 1; }
-             pip install -r requirements.txt || { echo 'Failed to install dependencies from requirements.txt'; exit 1; }
+    ```yaml
+    jobs:
+      build:
+    ```
+    1. jobs: This key defines a collection of jobs that will be run as part of the workflow. Each job is an independent unit of work that executes on a fresh virtual machine.
+    2. build: This is the identifier (name) of the job. You can name jobs anything you like. In this case, it's named build.
 
-         - name: List installed packages
-           run: pip list
+3. **Job Configuration**:
+    ```yaml
+    runs-on: ubuntu-latest
+    ```
+    runs-on: This specifies the type of virtual machine (runner) that the job will run on. In this case, it is set to ubuntu-latest, which means the job will run on the latest version of an Ubuntu Linux virtual machine provided by GitHub Actions.
 
-         - name: Error handling
-           run: |
-             set -e
-             echo "All steps completed successfully."
-     ````
+    ex.:ubuntu-latest: Latest Ubuntu Linux (default).
+        windows-latest: Latest Windows Server.
+        macos-latest: Latest macOS.
+        ubuntu-20.04: Specific version of Ubuntu.
 
-2. **Commit and Push Changes to `feature/dev-build` Branch**
+    These virtual machines are pre-configured with a variety of tools and utilities commonly used in software development, including various versions of programming languages, compilers, build tools, and more.
+
+
+4. **Checkout repository**:
+   ```yaml
+   - name: Checkout repository
+     uses: actions/checkout@v2
+   ```
+   This step uses the `actions/checkout` action to check out the source code of the repository.
+
+5. **List content of repo**:
+   ```yaml
+   - name: List content of repo
+     run: ls -al
+   ```
+   This step lists the contents of the repository directory for verification purposes.
+
+6. **Set up Python 3.11**:
+   ```yaml
+   - name: Set up Python 3.11
+     uses: actions/setup-python@v2
+     with:
+       python-version: 3.11
+   ```
+   This step sets up Python 3.11 on the virtual machine.
+
+7. **Create virtual environment**:
+   ```yaml
+   - name: Create virtual environment
+     run: python -m venv venv
+   ```
+   The command python -m venv venv is used to create a virtual environment in Python.
+
+   1. python: This is the Python interpreter. Depending on our system i.e.python3, if python defaults to Python 2.x.
+   2. -m venv: The -m flag allows us to run a library module as a script. In this case, venv is a module that comes with Python's standard library and is used to create virtual environments.
+   3. venv: This is the name of the directory where the virtual environment will be created. We can set name for this directory anything, but venv is a common convention.
+
+8. **Activate virtual environment**:
+   ```yaml
+   - name: Activate virtual environment
+     run: source venv/bin/activate
+   ```
+   This step activates the previously created virtual environment.
+   
+   The command source venv/bin/activate is used to activate a Python virtual environment on Unix-like systems (e.g., Linux, macOS). The bin directory is where the activation script is located by default when a virtual environment is created using python -m venv venv.
+   ex: source myenv/bin/activate (Unix-like systems)
+      .\myenv\Scripts\activate (Windows)
+        
+
+9. **Install dependencies**:
+   ```yaml
+   - name: Install dependencies
+     run: |
+       set -e
+       pip install --upgrade pip
+       pip install -r requirements.txt
+     continue-on-error: false
+   ```
+   This step installs the dependencies listed in the `requirements.txt` file.
+   
+   The `set -e` command ensures that the script exits immediately if a command exits with a non-zero status(failure).
+
+   The continue-on-error option determines whether the workflow should continue executing subsequent steps if the current step fails.
+   
+   1. continue-on-error: false: This is the default behavior. If the step fails (i.e., returns a non-zero exit code), the workflow will stop executing further steps and mark the job as failed.
+   2. continue-on-error: true: If this option is set to true, the workflow will continue executing subsequent steps even if the current step fails. The job will not be marked as failed due to this step.
+
+10. **List installed packages**:
+   ```yaml
+   - name: List installed packages
+     run: pip list
+   ```
+   This step lists all the installed Python packages in the virtual environment.
+
+
+11. **Save, Commit and Push Changes to `feature/dev-build` Branch**
+  Save the changes and
    ```sh
-   git add .github/workflows/python-build.yml
+   git add .github/workflows/python-package.yml
    git commit -m "Add GitHub Action workflow"
    git push origin feature/dev-build
    ```
