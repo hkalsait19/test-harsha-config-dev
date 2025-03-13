@@ -43,4 +43,4 @@ jobs:
     
     - name: Deactivate virtual environment
       run: |
-        source ./venv/bin/deactivate || { echo 'Failed to deactivate virtual environment'; exit 1; }
+        deactivate
