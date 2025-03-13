@@ -1,6 +1,6 @@
 paramiko
 pymssql
 urllib3
-certifi #update name
+certifi #update name - not found any certify python packages
 ansible
 requests

@@ -32,6 +32,7 @@ jobs:
 
     - name: Install dependencies
       run: |
+        set -e #to ensure that the script exits immediately if a command exits with a non-zero status.
         pip install --upgrade pip || { echo 'Failed to upgrade pip'; exit 1; }
         pip install -r requirements.txt || { echo 'Failed to install dependencies from requirements.txt'; exit 1; }
       continue-on-error: false
