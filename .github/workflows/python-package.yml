@@ -29,6 +29,8 @@ jobs:
     - name: Activate virtual environment
       run: |
         source ./venv/bin/activate || { echo 'Failed to activate virtual environment'; exit 1; }
+        echo "Running some commands inside the virtual environment"
+        python --version
         deactivate
 
     - name: Install dependencies
@@ -41,11 +43,4 @@ jobs:
     - name: List installed packages
       run: |
         pip list || { echo 'Failed to list installed packages'; exit 1; }
-    
-    # - name: Deactivate virtual environment
-    #   run: |
-    #     if 
-    #     exit 1 # failure stop
-    #    #deactivate
-
   
